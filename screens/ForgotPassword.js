@@ -18,10 +18,13 @@ const ForgotPassword = () =>{
     const forgotPassword = () => {
         sendPasswordResetEmail(auth, email)
         .then(() => {
+            alert("Email de redefinição enviado com sucesso!");
             console.log("Email de redefinição enviado com sucesso!")
         })
         .catch(() => {
+            alert("Erro ao enviar email de redefinição!");
             console.log("Erro ao enviar email de redefinição!")
+            props.navigation.pop();
         })
     }
 

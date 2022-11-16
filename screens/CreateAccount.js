@@ -33,6 +33,7 @@ const CreateAccount = (props) => {
                 console.log("Usuário cadastrado com sucesso!");
                 //console.log(JSON.stringify(userCredential))
                 setErrorPass('')
+                alert("Usuário cadastrado com sucesso!")
                 props.navigation.pop();
             })
             .catch( (error) => {
