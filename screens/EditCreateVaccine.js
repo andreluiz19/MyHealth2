@@ -17,15 +17,6 @@ import Radio from '../components/Radio';
 
 const EditCreateVaccine = (props) => {
 
-    
-
-    const resetFields = () => {
-        setData('')
-        setVacina('')
-        setDose('')
-        setProximaDose('')
-    }
-
     const idTela = props.route.params.idTela;
 
     if(idTela == 1){
@@ -36,19 +27,31 @@ const EditCreateVaccine = (props) => {
         var [proximaDose, setProximaDose] = useState(item.proximaDose);
         if(dose == '1a. dose'){
             var [selected, setSelected] = useState(0);
+            console.log('Teste 1')
         }else if(dose == '2a. dose'){
             var [selected, setSelected] = useState(1);
+            console.log('Teste 2')
         }else if(dose == '3a. dose'){
             var [selected, setSelected] = useState(2);
-        }else{
+            console.log('Teste 3')
+        }else if(dose == '1a. dose' && proximaDose == ''){
             var [selected, setSelected] = useState(3);
+            console.log('Teste 4')
         }
+        console.log(item)
     }else if(idTela == 2){
         var [vacina, setVacina] = useState();
         var [data, setData] = useState();
         var [dose, setDose] = useState();
         var [proximaDose, setProximaDose] = useState();
-        var [selected, setSelected] = useState(3);
+        var [selected, setSelected] = useState();
+    }
+
+    const resetFields = () => {
+        setData('')
+        setVacina('')
+        setDose('')
+        setProximaDose('')
     }
 
     const [visible, setVisible] = useState(false);
@@ -76,13 +79,15 @@ const EditCreateVaccine = (props) => {
             urlImage: require('../images/comprovanteVacina.png'),
             proximaDose: proximaDose
         }
-        resetFields();
+        //resetFields();
         props.navigation.navigate('HomeContent', {item: vac, screen: 1});
     }
 
     const showVaccine = () => {
         console.log(item);
     }
+
+    
 
     return(
         
@@ -128,7 +133,7 @@ const EditCreateVaccine = (props) => {
                 idTela == 1 ?
                     <>
                         <View style={styles.buttonSalvarContainer}>
-                            <MyButtons label="Salvar alterções" style={styles.buttonSalvar} styleText={styles.buttonText} onPress={showVaccine}/>
+                            <MyButtons label="Salvar alterações" style={styles.buttonSalvar} styleText={styles.buttonText} onPress={showVaccine}/>
                         </View>
                     
                         <IconTrash style={styles.iconTrash} />

@@ -9,8 +9,7 @@ import {
 import MyDrawer from '../components/MyDrawer';
 import HomeContent from '../screens/HomeContent';
 import NextVaccines from '../screens/NextVaccines';
-import EditVaccine from '../screens/EditVaccine';
-import NewVaccine from '../screens/NewVaccine';
+import EditCreateVaccine from '../screens/EditCreateVaccine';
 
 
 const Drawer = createDrawerNavigator()
@@ -67,38 +66,8 @@ const Home = (props) => {
                     },
                 }}
             />
-            <Drawer.Screen name="EditVaccine" component={EditVaccine}
-                options={{
-                    drawerItemStyle: {
-                        display: 'none'
-                    },
-                    title: "Minhas vacinas",
-                    headerStyle: {
-                        backgroundColor: '#C1E7E3',
-                    },
-                    headerTitleStyle: {
-                        fontFamily: 'AveriaLibre-Regular',
-                        fontSize: 26,
-                        color: '#419ED7',
-                    },
-                }}
-            />
-            <Drawer.Screen name="NewVaccine" component={NewVaccine}
-                options={{
-                    drawerItemStyle: {
-                        display: 'none'
-                    },
-                    title: "Minhas vacinas",
-                    headerStyle: {
-                        backgroundColor: '#C1E7E3',
-                    },
-                    headerTitleStyle: {
-                        fontFamily: 'AveriaLibre-Regular',
-                        fontSize: 26,
-                        color: '#419ED7',
-                    },
-                }}
-            />
+            
+            
             
             
         </Drawer.Navigator>

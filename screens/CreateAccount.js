@@ -1,10 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
 import {
     View,
     StyleSheet,
     Text,
     Dimensions
-} from 'react-native'
+} from 'react-native';
+import { addDoc, collection } from 'firebase/firestore';
 
 import MyInputs from '../components/MyInputs';
 import MyButtons from '../components/MyButtons';
@@ -12,7 +13,8 @@ import IconCalendar from '../components/IconCalendar';
 import Radio from '../components/Radio';
 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase'
+import { auth } from '../config/firebase';
+import { db } from '../config/firebase'
 
 const CreateAccount = (props) => {
 
@@ -26,14 +28,17 @@ const CreateAccount = (props) => {
 
     const [errorPass, setErrorPass] = useState('');
 
+    console.log(sexo)
+
     const newUser = () => {
         if(senha == repetirSenha){
             createUserWithEmailAndPassword(auth, email, senha)
             .then( (userCredential) => {
+                newUserData();
+                alert("Usuário cadastrado com sucesso!")
                 console.log("Usuário cadastrado com sucesso!");
                 //console.log(JSON.stringify(userCredential))
                 setErrorPass('')
-                alert("Usuário cadastrado com sucesso!")
                 props.navigation.pop();
             })
             .catch( (error) => {
@@ -44,6 +49,24 @@ const CreateAccount = (props) => {
             console.log('As senhas não conferem!');
             setErrorPass('Senha não confere!');
         }
+    }
+
+    function newUserData(){
+        addDoc(collection(db, "users"), {
+            email: email,
+            senha: senha,
+            repetirSenha: repetirSenha,
+            nomeCompleto: nomeCompleto,
+            dataNasc: dataNasc,
+            sexo: sexo
+        })
+        .then((result) => {
+            console.log("Documento criado com sucesso!");
+            props.navigation.pop();
+        })  
+        .catch((error) => {
+            console.log(error);
+        }) 
     }
 
     return(
@@ -77,7 +100,7 @@ const CreateAccount = (props) => {
             </View>
             <View style={styles.center}>
                 {errorPass && <Text style={styles.errorPass}>{errorPass}</Text>}
-                <MyButtons label="Cadastrar" style={styles.buttonEntrar} onPress={newUser} />
+                <MyButtons label="Cadastrar" style={styles.buttonEntrar} onPress={newUserData} />
             </View>
 
         </View>

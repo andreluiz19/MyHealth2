@@ -52,4 +52,21 @@ borderWidth: 1,
 <MyRadioButton style={styles.radio} styleText={styles.styleText} label="Dose única" />
 </View>
 
+<Drawer.Screen name="EditCreateVaccine" component={EditCreateVaccine} 
+                options={{
+                    drawerItemStyle: {
+                        display: 'none'
+                    },
+                    title: "Minhas vacinas",
+                    headerStyle: {
+                        backgroundColor: '#C1E7E3',
+                    },
+                    headerTitleStyle: {
+                        fontFamily: 'AveriaLibre-Regular',
+                        fontSize: 26,
+                        color: '#419ED7',
+                    },
+                }}
+            />
+
 */
