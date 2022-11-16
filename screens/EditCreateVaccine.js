@@ -17,43 +17,37 @@ import Radio from '../components/Radio';
 
 const EditCreateVaccine = (props) => {
 
+    const {item} = props.route.params.item;
+
+    useEffect(() =>{
+        setVacina(item.vacina);
+        setData(item.data);
+        setDose(item.dose);
+        setProximaDose(item.proximaDose);
+        setSelected(() => {
+            if(item.dose == '1a. dose'){
+                alert(0)
+                return 0;
+            }else if(item.dose == '2a. dose'){
+                alert(1)
+                return 1;
+            }else if(item.dose == '3a. dose'){
+                alert(2)
+                return 2;
+            }else if(item.dose == 'Dose única'){
+                alert(3)
+                return 3;
+            }
+        });
+    }, [item.id])
+
     const idTela = props.route.params.idTela;
-
-    if(idTela == 1){
-        var {item} = props.route.params.item;
-        var [vacina, setVacina] = useState(item.vacina);
-        var [data, setData] = useState(item.data);
-        var [dose, setDose] = useState(item.dose);
-        var [proximaDose, setProximaDose] = useState(item.proximaDose);
-        if(dose == '1a. dose'){
-            var [selected, setSelected] = useState(0);
-            console.log('Teste 1')
-        }else if(dose == '2a. dose'){
-            var [selected, setSelected] = useState(1);
-            console.log('Teste 2')
-        }else if(dose == '3a. dose'){
-            var [selected, setSelected] = useState(2);
-            console.log('Teste 3')
-        }else if(dose == '1a. dose' && proximaDose == ''){
-            var [selected, setSelected] = useState(3);
-            console.log('Teste 4')
-        }
-        console.log(item)
-    }else if(idTela == 2){
-        var [vacina, setVacina] = useState();
-        var [data, setData] = useState();
-        var [dose, setDose] = useState();
-        var [proximaDose, setProximaDose] = useState();
-        var [selected, setSelected] = useState();
-    }
-
-    const resetFields = () => {
-        setData('')
-        setVacina('')
-        setDose('')
-        setProximaDose('')
-    }
-
+    
+    const [vacina, setVacina] = useState(item.vacina);
+    const [data, setData] = useState(item.data);
+    const [dose, setDose] = useState(item.dose);
+    const [proximaDose, setProximaDose] = useState(item.proximaDose);
+    const [selected, setSelected] = useState();
     const [visible, setVisible] = useState(false);
 
     const changeModalVisible = (bool) => {
@@ -70,24 +64,21 @@ const EditCreateVaccine = (props) => {
     }
 
     const novaVacina = () => {
-        const qtd = props.route.params.qtd
+        const idTemp = Math.floor(Math.random() * 100000);
         const vac = {
-            id: qtd + 1,
+            id: idTemp,
             vacina: vacina,
             data: data,
             dose: dose,
             urlImage: require('../images/comprovanteVacina.png'),
             proximaDose: proximaDose
         }
-        //resetFields();
         props.navigation.navigate('HomeContent', {item: vac, screen: 1});
     }
 
     const showVaccine = () => {
         console.log(item);
     }
-
-    
 
     return(
         
@@ -159,10 +150,11 @@ const EditCreateVaccine = (props) => {
             }
         </View>
         
-        
-        
-       
-       
+       /*
+      <View>
+        <Text>A</Text>
+      </View>
+            */
     ); 
 }
 
@@ -182,7 +174,7 @@ const styles = StyleSheet.create({
     },
     buttonSalvarContainer: {
         marginLeft: 115,
-        marginTop: 30,
+        marginTop: 50,
         width: 180,
     },
     buttonExcluir: {
@@ -193,11 +185,11 @@ const styles = StyleSheet.create({
         elevation: 20
     },
     buttonExcluirContainer: {
-        marginTop: Dimensions.get('window').height - 610,
+        marginTop: Dimensions.get('window').height - 600,
         width: 130
     },
     iconTrash: {
-        marginTop: Dimensions.get('window').height - 623,
+        marginTop: Dimensions.get('window').height - 613,
         position: 'absolute',
         zIndex: 1,
         marginLeft: 140,

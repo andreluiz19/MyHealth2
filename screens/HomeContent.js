@@ -49,15 +49,26 @@ const listaVacinas = [
     }
 ]
 
+const newVac = {
+    item: {
+        id: '',
+        vacina: '',
+        data: '',
+        dose: '',
+        urlImage: '',
+        proximaDose: '',
+    }
+}
+
+
 const HomeContent = (props) => {
 
     const [isRefresh, isSetRefresh] = useState(false)
 
     const goToEditCreateVaccine = () => {
         isSetRefresh(!isRefresh)
-        props.navigation.navigate('EditCreateVaccine', {qtd: listaVacinas.length, idTela: 2});
+        props.navigation.navigate('EditCreateVaccine', {item: newVac, idTela: 2});
     }
-
     useEffect(() => {
         if(props.route.params?.item && props.route.params?.screen == 1){
             isSetRefresh(!isRefresh)
@@ -92,7 +103,7 @@ const HomeContent = (props) => {
             </View>
             
             <FlatList data={listaVacinas} renderItem={(item) => <CardVacina item={item} 
-                onPress={() => props.navigation.navigate('EditCreateVaccine', {item: item, idTela: 1},) } />} numColumns={2} 
+                onPress={() => props.navigation.navigate('EditCreateVaccine', {item: item, idTela: 1})} />} numColumns={2} 
             />
             
             <View style={styles.button}>

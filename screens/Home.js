@@ -11,7 +11,6 @@ import HomeContent from '../screens/HomeContent';
 import NextVaccines from '../screens/NextVaccines';
 import EditCreateVaccine from '../screens/EditCreateVaccine';
 
-
 const Drawer = createDrawerNavigator()
 
 const Home = (props) => {
@@ -66,7 +65,22 @@ const Home = (props) => {
                     },
                 }}
             />
-            
+            <Drawer.Screen name="EditCreateVaccine" component={EditCreateVaccine} 
+                options={{
+                    drawerItemStyle: {
+                        display: 'none'
+                    },
+                    title: "Minhas vacinas",
+                    headerStyle: {
+                        backgroundColor: '#C1E7E3',
+                    },
+                    headerTitleStyle: {
+                        fontFamily: 'AveriaLibre-Regular',
+                        fontSize: 26,
+                        color: '#419ED7',
+                    },
+                }}
+            />
             
             
             
