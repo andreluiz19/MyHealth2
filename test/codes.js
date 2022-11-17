@@ -69,4 +69,12 @@ borderWidth: 1,
                 }}
             />
 
+const dispatch = useDispatch();
+ dispatch(reducerSetLogin({
+            email: email, 
+            password: senha,
+            idUser: userUID,
+            idDoc: result.id
+        }))
+
 */

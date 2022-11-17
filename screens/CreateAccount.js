@@ -5,7 +5,6 @@ import {
     Text,
     Dimensions
 } from 'react-native';
-import { addDoc, collection } from 'firebase/firestore';
 
 import MyInputs from '../components/MyInputs';
 import MyButtons from '../components/MyButtons';
@@ -15,33 +14,34 @@ import Radio from '../components/Radio';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { db } from '../config/firebase'
+import { addDoc, collection } from 'firebase/firestore';
+
+
 
 const CreateAccount = (props) => {
 
-    const [email, setEmail] = useState();
-    const [senha, setSenha] = useState();
-    const [repetirSenha, setRepetirSenha] = useState();
-    const [nomeCompleto, setNomeCompleto] = useState();
-    const [dataNasc, setDataNasc] = useState();
-    const [sexo, setSexo] = useState();
-    const [selected, setSelected] = useState(0);
-
-    const [errorPass, setErrorPass] = useState('');
-
-    console.log(sexo)
+    const [email, setEmail] = useState('andre@hotmail.com');
+    const [senha, setSenha] = useState('123456');
+    const [repetirSenha, setRepetirSenha] = useState('123456');
+    const [nomeCompleto, setNomeCompleto] = useState('Andre Luiz');
+    const [dataNasc, setDataNasc] = useState('19/09/2001');
+    const [sexo, setSexo] = useState('Masculino');
+    const [errorPass, setErrorPass] = useState();
+    const [selected, setSelected] = useState();
 
     const newUser = () => {
         if(senha == repetirSenha){
             createUserWithEmailAndPassword(auth, email, senha)
-            .then( (userCredential) => {
-                newUserData();
+            .then((userCredential) => {
+                console.log(userCredential.user.uid);
+                newUserData(userCredential.user.uid);
                 alert("Usuário cadastrado com sucesso!")
                 console.log("Usuário cadastrado com sucesso!");
                 //console.log(JSON.stringify(userCredential))
                 setErrorPass('')
                 props.navigation.pop();
             })
-            .catch( (error) => {
+            .catch((error) => {
                 console.log("Ocorreu um erro ao cadastrar usuário!");
                 console.log("Erro: " + error.message);
             })
@@ -51,21 +51,22 @@ const CreateAccount = (props) => {
         }
     }
 
-    function newUserData(){
-        addDoc(collection(db, "users"), {
+    const newUserData = async (userUID) => {
+        await addDoc(collection(db, "users"), {
             email: email,
             senha: senha,
             repetirSenha: repetirSenha,
             nomeCompleto: nomeCompleto,
             dataNasc: dataNasc,
-            sexo: sexo
+            sexo: sexo,
+            userUID: userUID,
         })
         .then((result) => {
             console.log("Documento criado com sucesso!");
             props.navigation.pop();
         })  
         .catch((error) => {
-            console.log(error);
+            console.log("Erro ao cadastras documento!", error);
         }) 
     }
 
@@ -100,7 +101,7 @@ const CreateAccount = (props) => {
             </View>
             <View style={styles.center}>
                 {errorPass && <Text style={styles.errorPass}>{errorPass}</Text>}
-                <MyButtons label="Cadastrar" style={styles.buttonEntrar} onPress={newUserData} />
+                <MyButtons label="Cadastrar" style={styles.buttonEntrar} onPress={newUser} />
             </View>
 
         </View>

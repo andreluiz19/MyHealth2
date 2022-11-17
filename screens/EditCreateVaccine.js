@@ -15,66 +15,103 @@ import IconTrash from '../components/IconTrash';
 import MyModal from '../components/MyModal';
 import Radio from '../components/Radio';
 
+import { db } from '../config/firebase';
+import { useSelector } from 'react-redux';
+import { onSnapshot, query, doc, deleteDoc, add, addDoc, collection, setDoc, getDoc, DocumentReference} from 'firebase/firestore';
+
 const EditCreateVaccine = (props) => {
 
-    const {item} = props.route.params.item;
-
-    useEffect(() =>{
-        setVacina(item.vacina);
-        setData(item.data);
-        setDose(item.dose);
-        setProximaDose(item.proximaDose);
-        setSelected(() => {
-            if(item.dose == '1a. dose'){
-                return 0;
-            }else if(item.dose == '2a. dose'){
-                return 1;
-            }else if(item.dose == '3a. dose'){
-                return 2;
-            }else if(item.dose == 'Dose única'){
-                return 3;
-            }
-        });
-    }, [item.id])
+    const uid = useSelector((state) => state.login.idUser);
 
     const idTela = props.route.params.idTela;
-    
-    const [vacina, setVacina] = useState(item.vacina);
-    const [data, setData] = useState(item.data);
-    const [dose, setDose] = useState(item.dose);
-    const [proximaDose, setProximaDose] = useState(item.proximaDose);
-    const [selected, setSelected] = useState();
+
+    const [vacina, setVacina] = useState('Dengue');
+    const [data, setData] = useState('19/11/2022');
+    const [dose, setDose] = useState('1a. Dose');
+    const [proximaDose, setProximaDose] = useState('19/05/2023');
     const [visible, setVisible] = useState(false);
+    const [selected, setSelected] = useState(0);
+
+    const vac ={
+        vacina: vacina,
+        data: data,
+        dose: dose,
+        proximaDose: proximaDose,
+    }
+    
+    const q = query(collection(db, "users"));
 
     const changeModalVisible = (bool) => {
         setVisible(bool);
     }
-    const confirmDelete = (bool) => {
-        if(bool){
-            const vac = item;
-            setVisible(false);
-            props.navigation.navigate('HomeContent', {item: vac, screen: 2})
-        }else{
-            
-        }
+    /*
+    const searchCollectionID = () => {
+        onSnapshot(q, (result) => {
+            result.forEach((doc) => {
+                if(doc.data().userUID == uid){
+                    //console.log(doc.data().userUID);
+                    newVaccine(doc.id);
+                }
+            })
+        })
     }
+    */
+    
+    const newVaccine = () => {
+        //console.log(idCollection);
+        
+        
 
-    const novaVacina = () => {
-        const idTemp = Math.floor(Math.random() * 100000);
-        const vac = {
-            id: idTemp,
+        /*
+        addDoc(collection(db, "users/"+idCollection+"/vacinas"), {
             vacina: vacina,
             data: data,
             dose: dose,
-            urlImage: require('../images/comprovanteVacina.png'),
-            proximaDose: proximaDose
-        }
-        props.navigation.navigate('HomeContent', {item: vac, screen: 1});
+            proximaDose: proximaDose,
+        })
+        .then((result) => {
+            console.log("Vacina cadastrada com sucesso!");
+            alert("Vacina cadastrada com sucesso!");
+            props.navigation.pop();
+        })  
+        .catch((error) => {
+            alert("Erro ao cadastras vacina!");
+            console.log("Erro ao cadastras vacina!", error);
+        })
+        */
+        /*
+        const urlCollection = "users/"+idCollection+"/vacians";
+        addDoc(collection(db, "users"), {
+            vacina: vacina,
+            data: data,
+            dose: dose,
+            proximaDose: proximaDose,
+            imageUrl: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.paho.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2Fmax_1500x1500%2Fpublic%2F2022-08%2Fgeneric-vaccine-1500x1000.jpg%3Fitok%3DIoGkc1TM&imgrefurl=https%3A%2F%2Fwww.paho.org%2Fpt%2Fnoticias%2F5-8-2022-paises-aprovam-resolucao-para-apoiar-acesso-equitativo-vacina-contra-variola-dos&tbnid=U-RfaclWAFjEgM&vet=12ahUKEwjxpoyM2LX7AhVAOLkGHf-BBPEQMygAegUIARCIAQ..i&docid=ByQrUIjfn4U6LM&w=1420&h=947&q=vacina&ved=2ahUKEwjxpoyM2LX7AhVAOLkGHf-BBPEQMygAegUIARCIAQ'
+        })
+        .then((result) => {
+            console.log("Vacina cadastrada com sucesso!");
+            alert("Vacina cadastrada com sucesso!");
+            props.navigation.pop();
+        })  
+        .catch((error) => {
+            alert("Erro ao cadastras vacina!");
+            console.log("Erro ao cadastras vacina!", error);
+        })
+        */
+       
     }
-
-    const showVaccine = () => {
-        console.log(item);
-    }
+    
+    
+    useEffect(() => {
+        onSnapshot(q, (result) => {
+            const vacinas = [];
+            result.forEach((doc) => {
+                if(doc.data().userUID == uid){
+                    console.log(doc);
+                }
+            })
+        })
+    })
 
     return(
         
@@ -122,7 +159,7 @@ const EditCreateVaccine = (props) => {
                 idTela == 1 ?
                     <>
                         <View style={styles.buttonSalvarContainer}>
-                            <MyButtons label="Salvar alterações" style={styles.buttonSalvar} styleText={styles.buttonText} onPress={showVaccine}/>
+                            <MyButtons label="Salvar alterações" style={styles.buttonSalvar} styleText={styles.buttonText} />
                         </View>
                     
                         <IconTrash style={styles.iconTrash} />
@@ -142,17 +179,14 @@ const EditCreateVaccine = (props) => {
                     :
                     <View>
                         <View style={styles.buttonCadastrarContainer}>
-                            <MyButtons label="Cadastrar" style={styles.buttonCadastrar} styleText={styles.buttonText} onPress={novaVacina}/>
+                            <MyButtons label="Cadastrar" style={styles.buttonCadastrar} styleText={styles.buttonText} onPress={newVaccine}/>
                         </View>
                     </View>
             }
         </View>
         
-       /*
-      <View>
-        <Text>A</Text>
-      </View>
-            */
+    
+    
     ); 
 }
 

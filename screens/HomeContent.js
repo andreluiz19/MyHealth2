@@ -1,5 +1,5 @@
-import { onLog } from 'firebase/app';
 import React, {useState, useEffect} from 'react'
+import { useSelector } from 'react-redux';
 
 import {
     View,
@@ -14,40 +14,7 @@ import IconSearch from '../components/IconSearch';
 import MyButtons from '../components/MyButtons';
 import MyInputs from '../components/MyInputs';
 
-const listaVacinas = [
-    {
-        id: 1,
-        vacina: 'BCG',
-        data: '11/06/2022',
-        dose: 'Dose única',
-        urlImage: require('../images/comprovanteVacina.png'),
-        proximaDose: ''
-    },
-    {
-        id: 2,
-        vacina: 'Febre amarela',
-        data: '11/10/2022',
-        dose: '1a. dose',
-        urlImage: require('../images/comprovanteVacina.png'),
-        proximaDose: '11/10/2023'
-    },
-    {
-        id: 3,
-        vacina: 'Hepatite B',
-        data: '11/08/2022',
-        dose: '1a. dose',
-        urlImage: require('../images/comprovanteVacina.png'),
-        proximaDose: '11/10/2022'
-    },
-    {
-        id: 4,
-        vacina: 'Poliomelite',
-        data: '11/08/2022',
-        dose: '1a. dose',
-        urlImage: require('../images/comprovanteVacina.png'),
-        proximaDose: '11/10/2022'
-    }
-]
+const listaVacinas = [];
 
 const newVac = {
     item: {
@@ -64,6 +31,10 @@ const newVac = {
 const HomeContent = (props) => {
 
     const [isRefresh, isSetRefresh] = useState(false)
+
+    const email = useSelector((state) => state.login.email);
+    const password = useSelector((state) => state.login.password);
+    const uid = useSelector((state) => state.login.idUser);
 
     const goToEditCreateVaccine = () => {
         isSetRefresh(!isRefresh)

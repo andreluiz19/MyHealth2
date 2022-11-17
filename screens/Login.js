@@ -14,20 +14,33 @@ import MyButtons from '../components/MyButtons';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../config/firebase';
 
+
+import { useDispatch } from 'react-redux';
+import { reducerSetLogin } from '../redux/loginSlice';
+
 const Login = (props) => {
 
-    const [email, setEmail] = useState('')
-    const [senha, setSenha] = useState('')
-    const [errorAuth, setErrorAuth] = useState()
+    const dispatch = useDispatch();
 
+    const [email, setEmail] = useState('andre@hotmail.com')
+    const [password, setPassword] = useState('123456')
+    const [errorAuth, setErrorAuth] = useState()
+    
     const loginUser = () => {
-        /*
-        signInWithEmailAndPassword(auth, email, senha)
+        
+        signInWithEmailAndPassword(auth, email, password)
         .then( (userCredential) => {
             console.log("Usuário autenticado com sucesso!");
+            dispatch(reducerSetLogin({
+                email: email, 
+                password: password,
+                idUser: userCredential.user.uid
+            }))
+            /*
             setErrorAuth('');
             setEmail('');
-            setSenha('');
+            setPassword('');
+            */
             goToHome();
         })
         .catch( (error) => {
@@ -35,8 +48,8 @@ const Login = (props) => {
             console.log("Erro: " + error.message);
             setErrorAuth('E-mail e/ou senha inválidos.');
         })
-        */
-        goToHome();
+        
+        //goToHome();
     }
 
     const goToHome = () => {
@@ -67,7 +80,7 @@ const Login = (props) => {
 
                 <View style={styles.inputs}>
                     <MyInputs placeholder="Digite o seu email..." label="E-mail" value={email} setValue={setEmail} />
-                    <MyInputs placeholder="Digite a sua senha..." label="Senha" value={senha} setValue={setSenha} secure={true} />
+                    <MyInputs placeholder="Digite a sua senha..." label="Senha" value={password} setValue={setPassword} secure={true} />
                     {errorAuth && <Text style={styles.errorAuth}>{errorAuth}</Text>}
                 </View>
 
