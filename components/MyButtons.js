@@ -7,7 +7,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-const MyButtons = (props) =>{
+const MyButtons = (props) => {
     
     const {label, onPress, style, styleText} = props;
 

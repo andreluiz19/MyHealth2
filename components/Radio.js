@@ -1,20 +1,18 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
-const Radio = ({options = [], 
-    horizontal = false, 
-    onChangeSelect, 
-    selected,
-}) => {
+const Radio = (props) => {
+
+    const {options, selected, horizontal, onChangeSelect, style} = props;
 
     return(
-        <View style={horizontal ? styles.horizontal : styles.vertical}>
+        <View style={horizontal ? [styles.horizontal, style] : styles.vertical}>
             {
                 options.map((opt, index) => (
                     <TouchableOpacity onPress={() => onChangeSelect(opt, index)} 
                         style={[styles.container]}
                     >
-                        <View style={styles.outlineCircle}>
+                        <View style={[styles.outlineCircle]}>
                             {selected == index && <View style={styles.innerCircle}/>}
                         </View>
                         <Text style={styles.texto}>{opt}</Text>
@@ -29,7 +27,8 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginLeft: 6
+        marginLeft: 12,
+        marginBottom: 6
     },
     horizontal: {
         flexDirection: 'row',
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontFamily: 'AveriaLibre-Regular',
         color: 'white',
-        marginLeft: 4,
+        marginLeft: 2
     }
 })
 

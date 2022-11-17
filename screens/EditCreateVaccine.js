@@ -26,16 +26,12 @@ const EditCreateVaccine = (props) => {
         setProximaDose(item.proximaDose);
         setSelected(() => {
             if(item.dose == '1a. dose'){
-                alert(0)
                 return 0;
             }else if(item.dose == '2a. dose'){
-                alert(1)
                 return 1;
             }else if(item.dose == '3a. dose'){
-                alert(2)
                 return 2;
             }else if(item.dose == 'Dose única'){
-                alert(3)
                 return 3;
             }
         });
@@ -94,8 +90,9 @@ const EditCreateVaccine = (props) => {
                 <MyInputs styleInput={styles.styleInput} styleText={styles.vacina} label="Vacina" value={vacina} setValue={setVacina}/>
             </View>
 
+            <Text style={styles.label}>Dose</Text>
+
             <View style={styles.radioContainer}>
-                <Text style={styles.label}>Dose</Text>
                 <Radio options={['1a. dose', '2a. dose', '3a. dose', 'Dose única']}
                         selected={selected} 
                         horizontal={true} 
@@ -103,6 +100,7 @@ const EditCreateVaccine = (props) => {
                             setSelected(i);
                             setDose(opt)
                         }} 
+                        style={styles.radioStyle}
                     />
             </View>
             
@@ -240,23 +238,22 @@ const styles = StyleSheet.create({
     },
     radioContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginRight: 10
+    },
+    radioStyle: {
+        flexWrap: 'wrap',
+        marginLeft: 150,
     },
     styleText: {
         fontSize: 14,
         marginLeft: -5
     },
-    radio: {
-        height: 15,
-        width: 15,
-        borderRadius: 10,
-        backgroundColor: 'white',
-    },
     label: {
         fontSize: 17,
         fontFamily: 'AveriaLibre-Regular',
         color: 'white',
+        position: 'absolute',
+        marginTop: 120,
+        marginLeft: 120
     }, 
     data: {
         fontSize: 17,
