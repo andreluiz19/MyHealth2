@@ -54,15 +54,15 @@ const Login = (props) => {
     }
 
     const goToHome = () => {
-        props.navigation.navigate('Home')
+        props.navigation.navigate('Home');
     }
 
     const goToCreateAccount = () => {
-        props.navigation.navigate('CreateAccount')
+        props.navigation.navigate('CreateAccount');
     }
 
     const goToForgotPassword = () => {
-        props.navigation.navigate('ForgotPassword')
+        props.navigation.navigate('ForgotPassword');
     }
 
     return(

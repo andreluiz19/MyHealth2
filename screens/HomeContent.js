@@ -36,7 +36,7 @@ const HomeContent = (props) => {
                 listaVacinas.push({
                     id: doc.id,
                     vacina: doc.data().vacina,
-                    data: doc.data().dose,
+                    data: doc.data().data,
                     proximaDose: doc.data().proximaDose,
                     dose: doc.data().dose,
                     urlImage: require('../images/comprovanteVacina.png'),

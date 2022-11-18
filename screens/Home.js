@@ -79,6 +79,7 @@ const Home = (props) => {
                         fontSize: 26,
                         color: '#419ED7',
                     },
+                    headerShown: true
                 }}
             />
             

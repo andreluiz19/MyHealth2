@@ -17,7 +17,7 @@ import Radio from '../components/Radio';
 
 import { db } from '../config/firebase';
 import { useSelector } from 'react-redux';
-import { query, deleteDoc, addDoc, collection, doc} from 'firebase/firestore';
+import { query, deleteDoc, addDoc, collection, doc, getDoc} from 'firebase/firestore';
 
 const EditCreateVaccine = (props) => {
 
@@ -26,19 +26,52 @@ const EditCreateVaccine = (props) => {
     const idTela = props.route.params.idTela;
     const id = props.route.params.id;
 
-    const [vacina, setVacina] = useState('Dengue');
-    const [data, setData] = useState('19/11/2022');
-    const [dose, setDose] = useState('1a. Dose');
-    const [proximaDose, setProximaDose] = useState('19/05/2023');
+    const [vacina, setVacina] = useState('');
+    const [data, setData] = useState('');
+    const [dose, setDose] = useState('');
+    const [proximaDose, setProximaDose] = useState('');
     const [urlImage, setUrlImage] = useState('');
     const [visible, setVisible] = useState(false);
-    const [selected, setSelected] = useState(0);
+    const [selected, setSelected] = useState();
     const urlVacina = "users/"+uid+"/vacinas";
 
     const changeModalVisible = (bool) => {
         setVisible(bool);
     }
+
+    const resetFields = () => {
+        setVacina('');
+        setData('');
+        setDose('');
+        setProximaDose('');
+        setSelected();
+    }
     
+    useEffect(() => { 
+        if(id){
+            getDoc(doc(db, urlVacina, id))
+            .then((result) => {
+                setVacina(result.data().vacina);
+                setData(result.data().data);
+                setDose(result.data().dose);
+                setProximaDose(result.data().proximaDose);
+                if(dose == '1a. dose'){
+                    setSelected(0);
+                }else if(dose == '2a. dose'){
+                    setSelected(1);
+                }else if(dose == '3a. dose'){
+                    setSelected(2);
+                }else if(dose == 'Dose única'){
+                    setSelected(3);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        }
+        
+    }, [])
+
     const newVaccine = () => {
         addDoc(collection(db, urlVacina), {
             vacina: vacina,
@@ -49,19 +82,21 @@ const EditCreateVaccine = (props) => {
         })
         .then((result) => {
             alert("Vacina cadastrada com sucesso!");
-            
+            resetFields();
+            props.navigation.navigation('HomeContent');
         })
         .catch((error) => {
             alert("Erro ao cadastrar vacina!");
             console.log(error);
         })
+        
     }
 
     const removeVaccine = () => {
         deleteDoc(doc(db, urlVacina, id))
         .then(() => {
             alert("Vacina deletada com sucesso!");
-            props.navigation.pop()
+            props.navigation.navigate('HomeContent');
         })
         .catch((error) => {
             alert("Erro ao deletar vacina!");
