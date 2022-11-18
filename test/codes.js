@@ -77,4 +77,6 @@ const dispatch = useDispatch();
             idDoc: result.id
         }))
 
+item={item} onPress={confirmDelete}
+
 */

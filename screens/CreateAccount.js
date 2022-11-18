@@ -14,7 +14,7 @@ import Radio from '../components/Radio';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { db } from '../config/firebase'
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, setDoc, doc } from 'firebase/firestore';
 
 
 
@@ -52,7 +52,7 @@ const CreateAccount = (props) => {
     }
 
     const newUserData = async (userUID) => {
-        await addDoc(collection(db, "users"), {
+            await setDoc(doc(db, "users", userUID), {
             email: email,
             senha: senha,
             repetirSenha: repetirSenha,

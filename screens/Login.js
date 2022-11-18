@@ -31,6 +31,7 @@ const Login = (props) => {
         signInWithEmailAndPassword(auth, email, password)
         .then( (userCredential) => {
             console.log("Usuário autenticado com sucesso!");
+            console.log(userCredential.user.uid);
             dispatch(reducerSetLogin({
                 email: email, 
                 password: password,

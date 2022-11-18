@@ -17,101 +17,67 @@ import Radio from '../components/Radio';
 
 import { db } from '../config/firebase';
 import { useSelector } from 'react-redux';
-import { onSnapshot, query, doc, deleteDoc, add, addDoc, collection, setDoc, getDoc, DocumentReference} from 'firebase/firestore';
+import { query, deleteDoc, addDoc, collection, doc} from 'firebase/firestore';
 
 const EditCreateVaccine = (props) => {
 
     const uid = useSelector((state) => state.login.idUser);
 
     const idTela = props.route.params.idTela;
+    const id = props.route.params.id;
 
     const [vacina, setVacina] = useState('Dengue');
     const [data, setData] = useState('19/11/2022');
     const [dose, setDose] = useState('1a. Dose');
     const [proximaDose, setProximaDose] = useState('19/05/2023');
+    const [urlImage, setUrlImage] = useState('');
     const [visible, setVisible] = useState(false);
     const [selected, setSelected] = useState(0);
-
-    const vac ={
-        vacina: vacina,
-        data: data,
-        dose: dose,
-        proximaDose: proximaDose,
-    }
-    
-    const q = query(collection(db, "users"));
+    const urlVacina = "users/"+uid+"/vacinas";
 
     const changeModalVisible = (bool) => {
         setVisible(bool);
     }
-    /*
-    const searchCollectionID = () => {
-        onSnapshot(q, (result) => {
-            result.forEach((doc) => {
-                if(doc.data().userUID == uid){
-                    //console.log(doc.data().userUID);
-                    newVaccine(doc.id);
-                }
-            })
-        })
-    }
-    */
     
     const newVaccine = () => {
-        //console.log(idCollection);
-        
-        
-
-        /*
-        addDoc(collection(db, "users/"+idCollection+"/vacinas"), {
+        addDoc(collection(db, urlVacina), {
             vacina: vacina,
             data: data,
             dose: dose,
             proximaDose: proximaDose,
+            urlImage: urlImage
         })
         .then((result) => {
-            console.log("Vacina cadastrada com sucesso!");
             alert("Vacina cadastrada com sucesso!");
-            props.navigation.pop();
-        })  
+            
+        })
         .catch((error) => {
-            alert("Erro ao cadastras vacina!");
-            console.log("Erro ao cadastras vacina!", error);
+            alert("Erro ao cadastrar vacina!");
+            console.log(error);
         })
-        */
-        /*
-        const urlCollection = "users/"+idCollection+"/vacians";
-        addDoc(collection(db, "users"), {
-            vacina: vacina,
-            data: data,
-            dose: dose,
-            proximaDose: proximaDose,
-            imageUrl: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.paho.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2Fmax_1500x1500%2Fpublic%2F2022-08%2Fgeneric-vaccine-1500x1000.jpg%3Fitok%3DIoGkc1TM&imgrefurl=https%3A%2F%2Fwww.paho.org%2Fpt%2Fnoticias%2F5-8-2022-paises-aprovam-resolucao-para-apoiar-acesso-equitativo-vacina-contra-variola-dos&tbnid=U-RfaclWAFjEgM&vet=12ahUKEwjxpoyM2LX7AhVAOLkGHf-BBPEQMygAegUIARCIAQ..i&docid=ByQrUIjfn4U6LM&w=1420&h=947&q=vacina&ved=2ahUKEwjxpoyM2LX7AhVAOLkGHf-BBPEQMygAegUIARCIAQ'
-        })
-        .then((result) => {
-            console.log("Vacina cadastrada com sucesso!");
-            alert("Vacina cadastrada com sucesso!");
-            props.navigation.pop();
-        })  
-        .catch((error) => {
-            alert("Erro ao cadastras vacina!");
-            console.log("Erro ao cadastras vacina!", error);
-        })
-        */
-       
     }
-    
-    
-    useEffect(() => {
-        onSnapshot(q, (result) => {
-            const vacinas = [];
-            result.forEach((doc) => {
-                if(doc.data().userUID == uid){
-                    console.log(doc);
-                }
-            })
+
+    const removeVaccine = () => {
+        deleteDoc(doc(db, urlVacina, id))
+        .then(() => {
+            alert("Vacina deletada com sucesso!");
+            props.navigation.pop()
         })
-    })
+        .catch((error) => {
+            alert("Erro ao deletar vacina!");
+            console.log(error);
+        })
+    }
+
+    const confirmDelete = (bool) => {
+        if(bool){
+            removeVaccine();
+            setVisible(false);
+            props.navigation.navigate('HomeContent');
+        }else{
+            
+        }
+    }
 
     return(
         
@@ -172,7 +138,7 @@ const EditCreateVaccine = (props) => {
                                 visible={visible}
                                 onRequestClose={() => changeModalVisible(false)}
                                 >
-                                <MyModal changeModalVisible={changeModalVisible} item={item} onPress={confirmDelete}/>
+                                <MyModal changeModalVisible={changeModalVisible} onPress={confirmDelete}/>
                             </Modal>
                         </View>
                     </>

@@ -10,8 +10,7 @@ import {
 
 const CardVacina = (props) => {
 
-    const {item} = props.item;
-    const {onPress} = props;
+    const { item } = props;
 
     const proxDose = (() => {
         if(item.proximaDose === ''){
@@ -21,9 +20,13 @@ const CardVacina = (props) => {
         }
     })
 
+    const goToEditVaccine = (id) => {
+        props.navigation.navigate('EditCreateVaccine', {idTela: 1, id: id});
+    }
+
     return(
         
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={() => goToEditVaccine(item.id)}>
             
             <View style={styles.card}>
                 <Text style={{fontSize: 22, color: '#3F92C5', fontFamily: 'AveriaLibre-Regular', marginTop: 5}}>{item.vacina}</Text>

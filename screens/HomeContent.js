@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux';
+import { onSnapshot, query, collection } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 import {
     View,
@@ -14,56 +16,35 @@ import IconSearch from '../components/IconSearch';
 import MyButtons from '../components/MyButtons';
 import MyInputs from '../components/MyInputs';
 
-const listaVacinas = [];
-
-const newVac = {
-    item: {
-        id: '',
-        vacina: '',
-        data: '',
-        dose: '',
-        urlImage: '',
-        proximaDose: '',
-    }
-}
-
-
 const HomeContent = (props) => {
-
-    const [isRefresh, isSetRefresh] = useState(false)
 
     const email = useSelector((state) => state.login.email);
     const password = useSelector((state) => state.login.password);
     const uid = useSelector((state) => state.login.idUser);
+    const [vacinas, setVacinas] = useState([]);
+    const urlVacinas = "users/"+uid+"/vacinas";
+    const q = query(collection(db, urlVacinas));
 
-    const goToEditCreateVaccine = () => {
-        isSetRefresh(!isRefresh)
-        props.navigation.navigate('EditCreateVaccine', {item: newVac, idTela: 2});
+    const goToNewVaccine = () => {
+        props.navigation.navigate('EditCreateVaccine', {idTela: 2})
     }
+ 
     useEffect(() => {
-        if(props.route.params?.item && props.route.params?.screen == 1){
-            isSetRefresh(!isRefresh)
-            //console.log('Vim da tela de criar nova vacina!')
-            const vac = props.route.params.item;
-            listaVacinas.push(vac);
-        }
-        if(props.route.params?.item && props.route.params?.screen == 2){
-            isSetRefresh(!isRefresh)
-            //console.log('Vim da tela de editar vacina!')
-            const vac = props.route.params.item;
-            console.log(vac);
-            listaVacinas.forEach( v => {
-                if(v.id == vac.id){
-                    //console.log(listaVacinas.indexOf(v));
-                    let index = listaVacinas.indexOf(v)
-                    listaVacinas.splice(index, 1); //Primeiro parâmetro o index segundo a quantida a remover
-                }
+        onSnapshot(q, (result) => {
+            const listaVacinas = [];
+            result.forEach((doc) => {
+                listaVacinas.push({
+                    id: doc.id,
+                    vacina: doc.data().vacina,
+                    data: doc.data().dose,
+                    proximaDose: doc.data().proximaDose,
+                    dose: doc.data().dose,
+                    urlImage: require('../images/comprovanteVacina.png'),
+                })
             })
-        }
-    }, [props.route.params?.item, props.route.params?.screen])
-
-    useEffect(() => {
-    }, [isRefresh, listaVacinas])
+            setVacinas(listaVacinas);
+        })
+    }, [])
 
     return(
         
@@ -73,12 +54,12 @@ const HomeContent = (props) => {
                 <MyInputs styleInput={styles.input} placeholder="        PESQUISAR VACINA..." />
             </View>
             
-            <FlatList data={listaVacinas} renderItem={(item) => <CardVacina item={item} 
-                onPress={() => props.navigation.navigate('EditCreateVaccine', {item: item, idTela: 1})} />} numColumns={2} 
+            <FlatList data={vacinas} renderItem={({item}) => <CardVacina item={item} 
+                navigation={props.navigation}/>} keyExtractor={item => item.id} numColumns={2} 
             />
             
             <View style={styles.button}>
-                <MyButtons label="Nova vacina" style={styles.buttonVacina} onPress={goToEditCreateVaccine} />
+                <MyButtons label="Nova vacina" style={styles.buttonVacina} onPress={goToNewVaccine}/>
             </View>
         </ScrollView>
         
