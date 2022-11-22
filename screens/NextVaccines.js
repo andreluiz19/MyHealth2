@@ -10,27 +10,13 @@ import MyButtons from '../components/MyButtons';
 
 const NextVaccines = (props) => {
 
-    //const {item} = props.route.params;
-
     const goToNewVaccine = () => {
-        props.navigation.navigate('NewVaccine', {idTela: 2})
+        props.navigation.navigate('EditCreateVaccine')
     }
 
     return(
 
         <View style={styles.container}>
-
-            <View>
-                <CardNextVaccines label="BCG" data="20/09/2022" />
-            </View>
-
-            <View>
-                <CardNextVaccines label="DTpa" data="20/09/2024" />
-            </View>
-            <View>
-
-                <CardNextVaccines label="Sarampo" data="03/04/2026" />
-            </View>
 
             <View style={styles.button}>
                 <MyButtons label="Nova vacina" style={styles.buttonVacina} onPress={goToNewVaccine} />

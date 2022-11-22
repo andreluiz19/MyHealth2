@@ -14,11 +14,13 @@ const MyInputs = (props) => {
     return (
         <View style={[styles.screen, style]}>
             <Text style={[styles.texto, styleText]}>{label}</Text>
-            <TextInput placeholder={placeholder} 
+            <TextInput placeholder={placeholder}
                         style={[styles.input, styleInput]}
                         value={value} 
                         onChangeText={setValue}
                         secureTextEntry={secure}
+                        underlineColorAndroid="transparent"
+                        textDe
             />
             
         </View>
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
         fontFamily: 'AveriaLibre-Regular',
     },
     input: {
-        fontSize: 18,
+        fontSize: 20,
         backgroundColor: 'white',
         color: '#419ED7',
         width: '80%',

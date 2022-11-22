@@ -24,11 +24,12 @@ const HomeContent = (props) => {
     const [vacinas, setVacinas] = useState([]);
     const urlVacinas = "users/"+uid+"/vacinas";
     const q = query(collection(db, urlVacinas));
+    const [searchString, setSearchString] = useState('');
 
     const goToNewVaccine = () => {
-        props.navigation.navigate('EditCreateVaccine', {idTela: 2})
+        props.navigation.navigate('EditCreateVaccine')
     }
- 
+
     useEffect(() => {
         onSnapshot(q, (result) => {
             const listaVacinas = [];
@@ -39,7 +40,7 @@ const HomeContent = (props) => {
                     data: doc.data().data,
                     proximaDose: doc.data().proximaDose,
                     dose: doc.data().dose,
-                    urlImage: require('../images/comprovanteVacina.png'),
+                    urlImage: doc.data().urlImage,
                 })
             })
             setVacinas(listaVacinas);
@@ -50,12 +51,18 @@ const HomeContent = (props) => {
         
         <ScrollView style={styles.container}>
             <View style={styles.inputContainer}>
-                <IconSearch style={styles.icon}></IconSearch>
-                <MyInputs styleInput={styles.input} placeholder="        PESQUISAR VACINA..." />
+            <IconSearch style={styles.icon} />
+                <MyInputs styleInput={styles.input} styleText={styles.text} placeholder="       PESQUISAR VACINA..." 
+                    value={searchString} setValue={setSearchString}
+                />
+                
             </View>
             
-            <FlatList data={vacinas} renderItem={({item}) => <CardVacina item={item} 
-                navigation={props.navigation}/>} keyExtractor={item => item.id} numColumns={2} 
+            <FlatList data={vacinas.filter((vacina) => 
+                    vacina.vacina.toLowerCase().includes(searchString.toLowerCase())
+                )}
+                renderItem={({item}) => <CardVacina item={item} navigation={props.navigation}/>} 
+                keyExtractor={item => item.id} numColumns={2}
             />
             
             <View style={styles.button}>
@@ -96,10 +103,17 @@ const styles = StyleSheet.create({
     icon: {
         position: 'absolute',
         zIndex: 1,
+        marginTop: -3,
+        marginLeft: -3
     },
     inputContainer: {
-       marginRight: 10
+        flexDirection: 'row',
+        marginRight: 10
+    },
+    text: {
+        padding: 50
     }
+
 })
 
 export default HomeContent

@@ -16,19 +16,19 @@ import IconTrash from '../components/IconTrash';
 import MyModal from '../components/MyModal';
 import Radio from '../components/Radio';
 
-import { db } from '../config/firebase';
+import { db, storage } from '../config/firebase';
 import { useSelector } from 'react-redux';
-import { query, deleteDoc, addDoc, collection, doc, getDoc, updateDoc} from 'firebase/firestore';
+import { useDispatch } from 'react-redux';
+import { reducerSetVacina } from '../redux/vacinaSlice';
+import { deleteDoc, addDoc, collection, doc, getDoc, updateDoc} from 'firebase/firestore';
 import { useBackHandler } from '@react-native-community/hooks';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { uploadBytes, ref, getDownloadURL, deleteObject } from 'firebase/storage';
 
 const EditCreateVaccine = (props) => {
 
     const uid = useSelector((state) => state.login.idUser);
-
-    const idTela = props.route.params.idTela;
-    const id = props.route.params.id;
-
+    const id = useSelector((state) => state.vacina.id);
     const [vacina, setVacina] = useState('');
     const [data, setData] = useState('');
     const [dose, setDose] = useState('');
@@ -38,6 +38,8 @@ const EditCreateVaccine = (props) => {
     const [selected, setSelected] = useState();
     const urlVacina = "users/"+uid+"/vacinas";
     const [isRefresh, setIsRefresh] = useState(true);
+    const dispatch = useDispatch();
+    const [pathImage, setPathImage] = useState(null);
 
     const changeModalVisible = (bool) => {
         setVisible(bool);
@@ -48,6 +50,7 @@ const EditCreateVaccine = (props) => {
         setData('');
         setDose('');
         setProximaDose('');
+        setUrlImage('');
         setSelected();
     }
     
@@ -55,13 +58,18 @@ const EditCreateVaccine = (props) => {
     useBackHandler(() => {
         if(isRefresh){
             //console.log(isRefresh);
+            dispatch(reducerSetVacina({
+                id: null
+            }))
             setIsRefresh(!isRefresh);
         }else{
             //console.log(isRefresh);
+            dispatch(reducerSetVacina({
+                id: null
+            }))
             setIsRefresh(!isRefresh);
         }
     });
-    
     
     useEffect(() => {
         if(id){
@@ -71,13 +79,15 @@ const EditCreateVaccine = (props) => {
                 setData(result.data().data);
                 setDose(result.data().dose);
                 setProximaDose(result.data().proximaDose);
-                if(dose == '1a. dose'){
+                setUrlImage(result.data().urlImage);
+                setPathImage(result.data().pathImage);
+                if(result.data().dose == '1a. dose'){
                     setSelected(0);
-                }else if(dose == '2a. dose'){
+                }else if(result.data().dose == '2a. dose'){
                     setSelected(1);
-                }else if(dose == '3a. dose'){
+                }else if(result.data().dose == '3a. dose'){
                     setSelected(2);
-                }else if(dose == 'Dose única'){
+                }else if(result.data().dose == 'Dose única'){
                     setSelected(3);
                 }
             })
@@ -87,41 +97,70 @@ const EditCreateVaccine = (props) => {
         }else{
             resetFields();
         }
-        
+
     }, [isRefresh, id]);
     
-    const newVaccine = () => {
-        addDoc(collection(db, urlVacina), {
-            vacina: vacina,
-            data: data,
-            dose: dose,
-            proximaDose: proximaDose,
-            urlImage: urlImage
-        })
+    const newVaccine = async () => {
+        const dados = await fetch(urlImage);
+        const blob = await dados.blob();
+        const filename = "images/"+urlImage.split("-")[urlImage.split("-").length-1];
+
+        uploadBytes(ref(storage, filename), blob)
         .then((result) => {
-            console.log("Cadastrou!");
-            alert("Vacina cadastrada com sucesso!");
-            props.navigation.navigate('HomeContent');
+            console.log("Arquivo enviado com sucesso!");
+            getDownloadURL(ref(storage, filename))
+            .then((url) => {
+                console.log("URL: "+url);
+                addDoc(collection(db, urlVacina), {
+                    vacina: vacina,
+                    data: data,
+                    dose: dose,
+                    proximaDose: proximaDose,
+                    urlImage: url,
+                    pathImage: filename
+                })
+                .then((result) => {
+                    console.log("Cadastrou!");
+                    alert("Vacina cadastrada com sucesso!");
+                    resetFields();
+                    props.navigation.navigate('HomeContent');
+                })
+                .catch((error) => {
+                    console.log("Não Cadastrou!");
+                    alert("Erro ao cadastrar vacina!");
+                    console.log(error);
+                })
+            })
+            .catch((error) => {
+                console.log("Erro ao obter link de download!");
+                console.log(error)
+            })
         })
         .catch((error) => {
-            console.log("Não Cadastrou!");
-            alert("Erro ao cadastrar vacina!");
+            console.log("Erro ao enviar arquivo!");
             console.log(error);
         })
-        
-        
     }
 
     const removeVaccine = () => {
-        deleteDoc(doc(db, urlVacina, id))
+        deleteObject(ref(storage, pathImage))
         .then(() => {
-            alert("Vacina deletada com sucesso!");
-            props.navigation.navigate('HomeContent');
+            deleteDoc(doc(db, urlVacina, id))
+            .then(() => {
+                resetFields();
+                alert("Vacina deletada com sucesso!");
+                props.navigation.navigate('HomeContent');
+            })
+            .catch((error) => {
+                alert("Erro ao deletar vacina!");
+                console.log(error);
+            })
         })
         .catch((error) => {
-            alert("Erro ao deletar vacina!");
+            console.log("Erro ao excluir arquivo!");
             console.log(error);
         })
+        
     }
 
     const confirmDelete = (bool) => {
@@ -134,20 +173,32 @@ const EditCreateVaccine = (props) => {
         }
     }
 
-    const updateVaccine = () => {
-        updateDoc(doc(db, urlVacina, id), {
-            vacina: vacina,
-            data: data,
-            dose: dose,
-            proximaDose: proximaDose,
-            urlImage: urlImage
-        })
+    const updateVaccine = async () => {
+        const dados = await fetch(urlImage);
+        const blob = await dados.blob();
+
+        uploadBytes(ref(storage, pathImage), blob)
         .then((result) => {
-            console.log("Vacina editar com sucesso!");
-            props.navigation.navigate('HomeContent');
+            console.log("Arquivo atualizado com sucesso!");
+            updateDoc(doc(db, urlVacina, id), {
+                vacina: vacina,
+                data: data,
+                dose: dose,
+                proximaDose: proximaDose,
+                urlImage: urlImage,
+                pathImage: pathImage
+            })
+            .then((result) => {
+                console.log("Vacina editada com sucesso!");
+                props.navigation.navigate('HomeContent');
+            })
+            .catch((error) => {
+                console.log("Erro ao editar vacina!");
+                console.log(error);
+            })
         })
         .catch((error) => {
-            console.log("Erro ao cadastrar vacina!");
+            console.log("Erro ao atualizar arquivo");
             console.log(error);
         })
     }
@@ -174,6 +225,7 @@ const EditCreateVaccine = (props) => {
     const showGallery = () => {
         launchImageLibrary()
         .then((result) => {
+            setUrlImage(result.assets[0].uri);
             console.log(result.assets[0].uri);
         })
         .catch((error) => {
@@ -185,6 +237,7 @@ const EditCreateVaccine = (props) => {
     const showCamera = () => {
         launchCamera()
         .then((result) => {
+            setUrlImage(result.assets[0].uri);
             console.log(result.assets[0].uri);
         })
         .catch((error) => {
@@ -227,7 +280,12 @@ const EditCreateVaccine = (props) => {
             </View>
 
             <View style={styles.containerImage}>
-                <Image style={styles.image} source={require('../images/comprovanteVacina.png')} />
+                {
+                    urlImage ?
+                        <Image style={styles.image} source={{ uri: urlImage }} />
+                    :
+                    null
+                }
             </View>
 
             <IconCalendar style={styles.icon2} />
@@ -236,7 +294,7 @@ const EditCreateVaccine = (props) => {
                 <MyInputs styleInput={styles.styleInput} styleText={styles.dataProx} label="Próxima de vacinação" value={proximaDose} setValue={setProximaDose}/>
             </View>
             {
-                idTela == 1 ?
+                id ?
                     <>
                         <View style={styles.buttonSalvarContainer}>
                             <MyButtons label="Salvar alterações" style={styles.buttonSalvar} styleText={styles.buttonText} onPress={updateVaccine}/>

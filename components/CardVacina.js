@@ -8,9 +8,13 @@ import {
     TouchableOpacity
 } from 'react-native'
 
+import { useDispatch } from 'react-redux';
+import { reducerSetVacina } from '../redux/vacinaSlice';
+
 const CardVacina = (props) => {
 
     const { item } = props;
+    const dispatch = useDispatch();
 
     const proxDose = (() => {
         if(item.proximaDose === ''){
@@ -19,11 +23,12 @@ const CardVacina = (props) => {
             return 'Próxima dose em: '
         }
     })
-
     const goToEditVaccine = (id) => {
-        props.navigation.navigate('EditCreateVaccine', {idTela: 1, id: id});
+        dispatch(reducerSetVacina({
+            id: id
+        }))
+        props.navigation.navigate('EditCreateVaccine');
     }
-
     return(
         
         <TouchableOpacity onPress={() => goToEditVaccine(item.id)}>
@@ -34,7 +39,7 @@ const CardVacina = (props) => {
                     fontFamily: 'AveriaLibre-Regular'}}>{item.dose}
                 </Text>
                 <Text style={{fontSize: 14, fontFamily: 'AveriaLibre-Regular', marginVertical: 5, color: 'gray'}}>{item.data}</Text>
-                <Image style={styles.image} source={item.urlImage}></Image>
+                <Image style={styles.image} source={{ uri: item.urlImage }}></Image>
                 <Text style={{fontSize: 14, color: '#FD7979', fontFamily: 'AveriaLibre-Regular'}}>{proxDose()}{item.proximaDose}</Text>
             </View>
 

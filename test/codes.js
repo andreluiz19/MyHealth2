@@ -90,4 +90,23 @@ useBackHandler(() => {
         }
     });
 
+    <IconSearch style={styles.icon}></IconSearch>
+
+    position: 'absolute',
+        zIndex: 1,
+
+        data={vacinas.filter((vacina) => {
+                    vacina.vacina.includes(searchString)
+                    console.log(vacina.vacina)
+                }
+            )}
+
+
+<IconSearch style={styles.icon}></IconSearch>
+                <MyInputs styleInput={styles.input} styleText={styles.text} placeholder="       PESQUISAR VACINA..." 
+                    value={searchString} setValue={setSearchString}
+                />
+
+
+<Image style={styles.image} source={require('../images/comprovanteVacina.png')} />
 */

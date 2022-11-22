@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import {initializeFirestore} from "firebase/firestore";
-
+import { initializeFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyC9vYwger-d8DkWDY8NNj3QPNrqtOPGoR4",
   authDomain: "myhealth-60cb4.firebaseapp.com",
@@ -13,8 +13,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app)
+const auth = getAuth(app);
 
-const db = initializeFirestore(app, {experimentalForceLongPolling: true})
+const db = initializeFirestore(app, {experimentalForceLongPolling: true});
 
-export { app, auth, db }
+const storage = getStorage(app);
+
+export { app, auth, db, storage }

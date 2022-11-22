@@ -13,6 +13,7 @@ MERGED from [:react-native-image-picker] C:\Users\Andre\Desktop\Projeto\MyHealth
 MERGED from [:react-native-reanimated] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-reanimated\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-safe-area-context] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-screens] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-vector-icons] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-vector-icons\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.react:react-native:0.70.1] C:\Users\Andre\.gradle\caches\transforms-3\52dc46a592dc383805ce46fda8bdc1a4\transformed\jetified-react-native-0.70.1-debug\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\Andre\.gradle\caches\transforms-3\4aa3daa4c119e5ebf154ad11d072f485\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.facebook.react:hermes-engine:0.70.1] C:\Users\Andre\.gradle\caches\transforms-3\bcd6bd1e1d5966599565f814c2f77aa2\transformed\jetified-hermes-engine-0.70.1-debug\AndroidManifest.xml:2:1-9:12
@@ -190,6 +191,8 @@ MERGED from [:react-native-safe-area-context] C:\Users\Andre\Desktop\Projeto\MyH
 MERGED from [:react-native-safe-area-context] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-screens] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-screens] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-vector-icons] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-vector-icons\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-vector-icons] C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-vector-icons\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.react:react-native:0.70.1] C:\Users\Andre\.gradle\caches\transforms-3\52dc46a592dc383805ce46fda8bdc1a4\transformed\jetified-react-native-0.70.1-debug\AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.react:react-native:0.70.1] C:\Users\Andre\.gradle\caches\transforms-3\52dc46a592dc383805ce46fda8bdc1a4\transformed\jetified-react-native-0.70.1-debug\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\Andre\.gradle\caches\transforms-3\4aa3daa4c119e5ebf154ad11d072f485\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44

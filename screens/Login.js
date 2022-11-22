@@ -5,7 +5,9 @@ import {
     StyleSheet,
     Text,
     ImageBackground,
-    Dimensions
+    Dimensions,
+    Alert,
+    BackHandler
 } from 'react-native'
 
 import MyInputs from '../components/MyInputs';
@@ -26,6 +28,25 @@ const Login = (props) => {
     const [password, setPassword] = useState('123456')
     const [errorAuth, setErrorAuth] = useState()
     
+    useEffect(() => {
+        const backAction = () => {
+            Alert.alert("Atenção!", "Você tem certeza que deseja sair?", [
+                {
+                text: "Cancelar",
+                onPress: () => null,
+                style: "cancel"
+                },
+                { text: "Sim", onPress: () => BackHandler.exitApp() }
+            ]);
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+    })
+
     const loginUser = () => {
         
         signInWithEmailAndPassword(auth, email, password)
