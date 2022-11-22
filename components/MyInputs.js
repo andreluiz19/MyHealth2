@@ -49,6 +49,8 @@ const styles = StyleSheet.create({
         color: '#419ED7',
         width: '80%',
         fontFamily: 'AveriaLibre-Regular',
+        padding: 0,
+        height: 40
     },
 })
 export default MyInputs;

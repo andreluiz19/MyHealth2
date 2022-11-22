@@ -109,4 +109,26 @@ useBackHandler(() => {
 
 
 <Image style={styles.image} source={require('../images/comprovanteVacina.png')} />
+
+useEffect(() => {
+        const backAction = () => {
+            Alert.alert("Atenção!", "Você tem certeza que deseja sair?", [
+                {
+                    text: "Cancelar",
+                    onPress: () => null,
+                    style: "cancel"
+                },
+                { 
+                    text: "Sim", onPress: () => BackHandler.exitApp() 
+            
+                }
+            ]);
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+    })
 */

@@ -46,7 +46,7 @@ const HomeContent = (props) => {
             setVacinas(listaVacinas);
         })
     }, [])
-
+    
     return(
         
         <ScrollView style={styles.container}>

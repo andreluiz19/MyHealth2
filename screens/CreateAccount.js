@@ -20,13 +20,13 @@ import { addDoc, collection, setDoc, doc } from 'firebase/firestore';
 
 const CreateAccount = (props) => {
 
-    const [email, setEmail] = useState('andre@hotmail.com');
-    const [senha, setSenha] = useState('123456');
-    const [repetirSenha, setRepetirSenha] = useState('123456');
-    const [nomeCompleto, setNomeCompleto] = useState('Andre Luiz');
-    const [dataNasc, setDataNasc] = useState('19/09/2001');
-    const [sexo, setSexo] = useState('Masculino');
-    const [errorPass, setErrorPass] = useState();
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [repetirSenha, setRepetirSenha] = useState('');
+    const [nomeCompleto, setNomeCompleto] = useState('');
+    const [dataNasc, setDataNasc] = useState('');
+    const [sexo, setSexo] = useState('');
+    const [errorPass, setErrorPass] = useState('');
     const [selected, setSelected] = useState();
 
     const newUser = () => {
@@ -38,7 +38,6 @@ const CreateAccount = (props) => {
                 alert("Usuário cadastrado com sucesso!")
                 console.log("Usuário cadastrado com sucesso!");
                 //console.log(JSON.stringify(userCredential))
-                setErrorPass('')
                 props.navigation.pop();
             })
             .catch((error) => {

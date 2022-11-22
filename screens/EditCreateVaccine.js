@@ -40,6 +40,8 @@ const EditCreateVaccine = (props) => {
     const [isRefresh, setIsRefresh] = useState(true);
     const dispatch = useDispatch();
     const [pathImage, setPathImage] = useState(null);
+    const dataFormatada = data.split('/');
+    const proxDoseFormatada = proximaDose.split('/');
 
     const changeModalVisible = (bool) => {
         setVisible(bool);
@@ -51,9 +53,9 @@ const EditCreateVaccine = (props) => {
         setDose('');
         setProximaDose('');
         setUrlImage('');
+        setPathImage(null);
         setSelected();
     }
-    
     
     useBackHandler(() => {
         if(isRefresh){
@@ -99,7 +101,7 @@ const EditCreateVaccine = (props) => {
         }
 
     }, [isRefresh, id]);
-    
+
     const newVaccine = async () => {
         const dados = await fetch(urlImage);
         const blob = await dados.blob();
@@ -111,6 +113,8 @@ const EditCreateVaccine = (props) => {
             getDownloadURL(ref(storage, filename))
             .then((url) => {
                 console.log("URL: "+url);
+                //const date = new Date(dataFormatada[2], dataFormatada[1], dataFormatada[0], 0, 0, 0, 0);
+                //const nextDate =  new Date(proxDoseFormatada[2], proxDoseFormatada[1], proxDoseFormatada[0], 0, 0, 0, 0);
                 addDoc(collection(db, urlVacina), {
                     vacina: vacina,
                     data: data,

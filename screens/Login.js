@@ -26,26 +26,7 @@ const Login = (props) => {
 
     const [email, setEmail] = useState('andre@hotmail.com')
     const [password, setPassword] = useState('123456')
-    const [errorAuth, setErrorAuth] = useState()
-    
-    useEffect(() => {
-        const backAction = () => {
-            Alert.alert("Atenção!", "Você tem certeza que deseja sair?", [
-                {
-                text: "Cancelar",
-                onPress: () => null,
-                style: "cancel"
-                },
-                { text: "Sim", onPress: () => BackHandler.exitApp() }
-            ]);
-            return true;
-        };
-    
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        );
-    })
+    const [errorAuth, setErrorAuth] = useState('')
 
     const loginUser = () => {
         
@@ -166,7 +147,7 @@ const styles = StyleSheet.create({
     },
     inputs: {
         marginTop: Dimensions.get('window').height * 0.05,
-        width: '90%'
+        width: '90%',
     },
     buttonEntrar: {
         backgroundColor: '#37BD6D',

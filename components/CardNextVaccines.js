@@ -8,14 +8,13 @@ import {
 
 const CardNextVaccines = (props) => {
 
-    const {label, data, style} = props
-
+    const {item, label, data, style} = props
     return(
 
         <View style={[styles.container, style]}>
             <View style={styles.box}>
-                <Text style={styles.texto}>{label}</Text>
-                <Text style={styles.data}>{data}</Text>
+                <Text style={styles.texto}>{item.vacina}</Text>
+                <Text style={styles.data}>{item.data}</Text>
             </View>
         </View>
 
@@ -32,18 +31,16 @@ const styles = StyleSheet.create({
     box: {
         backgroundColor: 'white',
         borderRadius: 10,
-        height: 60,
-        width: '100%'
+        width: '100%',
+        padding: 10
     },
     texto: {
         fontFamily: 'AveriaLibre-Regular',
-        fontSize: 22,
+        fontSize: 24,
         color: '#3F92C5',
-        paddingTop: 10,
-        paddingLeft: 10
     },
     data: {
-        paddingLeft: 10,
+        fontSize: 18,
         color: 'gray'
     }
 })
