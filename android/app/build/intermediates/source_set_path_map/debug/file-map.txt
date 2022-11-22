@@ -31,6 +31,7 @@ com.myhealth.app-merged_res-29 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth
 com.myhealth.app-debug-30 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\android\app\src\debug\res
 com.myhealth.app-main-31 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\android\app\src\main\res
 com.myhealth.app-packaged_res-32 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-gesture-handler\android\build\intermediates\packaged_res\debug
-com.myhealth.app-packaged_res-33 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-reanimated\android\build\intermediates\packaged_res\debug
-com.myhealth.app-packaged_res-34 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
-com.myhealth.app-packaged_res-35 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug
+com.myhealth.app-packaged_res-33 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-image-picker\android\build\intermediates\packaged_res\debug
+com.myhealth.app-packaged_res-34 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-reanimated\android\build\intermediates\packaged_res\debug
+com.myhealth.app-packaged_res-35 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
+com.myhealth.app-packaged_res-36 C:\Users\Andre\Desktop\Projeto\MyHealth2\MyHealth\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug

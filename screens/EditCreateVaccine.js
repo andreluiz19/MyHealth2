@@ -5,7 +5,8 @@ import {
     StyleSheet,
     Dimensions,
     Image,
-    Modal
+    Modal,
+    Alert
 } from 'react-native'
 
 import IconCalendar from '../components/IconCalendar';
@@ -17,7 +18,9 @@ import Radio from '../components/Radio';
 
 import { db } from '../config/firebase';
 import { useSelector } from 'react-redux';
-import { query, deleteDoc, addDoc, collection, doc, getDoc} from 'firebase/firestore';
+import { query, deleteDoc, addDoc, collection, doc, getDoc, updateDoc} from 'firebase/firestore';
+import { useBackHandler } from '@react-native-community/hooks';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 const EditCreateVaccine = (props) => {
 
@@ -34,6 +37,7 @@ const EditCreateVaccine = (props) => {
     const [visible, setVisible] = useState(false);
     const [selected, setSelected] = useState();
     const urlVacina = "users/"+uid+"/vacinas";
+    const [isRefresh, setIsRefresh] = useState(true);
 
     const changeModalVisible = (bool) => {
         setVisible(bool);
@@ -47,7 +51,19 @@ const EditCreateVaccine = (props) => {
         setSelected();
     }
     
-    useEffect(() => { 
+    
+    useBackHandler(() => {
+        if(isRefresh){
+            //console.log(isRefresh);
+            setIsRefresh(!isRefresh);
+        }else{
+            //console.log(isRefresh);
+            setIsRefresh(!isRefresh);
+        }
+    });
+    
+    
+    useEffect(() => {
         if(id){
             getDoc(doc(db, urlVacina, id))
             .then((result) => {
@@ -68,10 +84,12 @@ const EditCreateVaccine = (props) => {
             .catch((error) => {
                 console.log(error);
             })
+        }else{
+            resetFields();
         }
         
-    }, [])
-
+    }, [isRefresh, id]);
+    
     const newVaccine = () => {
         addDoc(collection(db, urlVacina), {
             vacina: vacina,
@@ -81,14 +99,16 @@ const EditCreateVaccine = (props) => {
             urlImage: urlImage
         })
         .then((result) => {
+            console.log("Cadastrou!");
             alert("Vacina cadastrada com sucesso!");
-            resetFields();
-            props.navigation.navigation('HomeContent');
+            props.navigation.navigate('HomeContent');
         })
         .catch((error) => {
+            console.log("Não Cadastrou!");
             alert("Erro ao cadastrar vacina!");
             console.log(error);
         })
+        
         
     }
 
@@ -112,6 +132,65 @@ const EditCreateVaccine = (props) => {
         }else{
             
         }
+    }
+
+    const updateVaccine = () => {
+        updateDoc(doc(db, urlVacina, id), {
+            vacina: vacina,
+            data: data,
+            dose: dose,
+            proximaDose: proximaDose,
+            urlImage: urlImage
+        })
+        .then((result) => {
+            console.log("Vacina editar com sucesso!");
+            props.navigation.navigate('HomeContent');
+        })
+        .catch((error) => {
+            console.log("Erro ao cadastrar vacina!");
+            console.log(error);
+        })
+    }
+
+    const imageOptions = () => {
+        Alert.alert("Selecionar Imagem", "Você deseja selecionar uma imagem da galeria ou abrir a câmera?", [
+            {
+                text: "Voltar",
+                cancelable: true,
+                style: "cancel"
+            },
+            {
+                text: "Galeria",
+                onPress: () => showGallery()
+            },
+            {
+                text: "Câmera",
+                onPress: () => showCamera()
+            },
+        
+        ])
+    }
+
+    const showGallery = () => {
+        launchImageLibrary()
+        .then((result) => {
+            console.log(result.assets[0].uri);
+        })
+        .catch((error) => {
+            console.log("Erro ao selecionar imagem!");
+            console.log(error);
+        })
+    }
+
+    const showCamera = () => {
+        launchCamera()
+        .then((result) => {
+            console.log(result.assets[0].uri);
+        })
+        .catch((error) => {
+            console.log("Erro ao selecionar imagem!");
+            console.log(error);
+        })
     }
 
     return(
@@ -144,7 +223,7 @@ const EditCreateVaccine = (props) => {
             
             <View style={styles.comprovanteContainer}>
                 <Text style={styles.comprovanteText}>Comprovante</Text>
-                <MyButtons label="Selecionar imagem..." style={styles.buttonComprovante} styleText={styles.buttonComprovanteText} />
+                <MyButtons label="Selecionar imagem..." style={styles.buttonComprovante} styleText={styles.buttonComprovanteText} onPress={imageOptions}/>
             </View>
 
             <View style={styles.containerImage}>
@@ -160,7 +239,7 @@ const EditCreateVaccine = (props) => {
                 idTela == 1 ?
                     <>
                         <View style={styles.buttonSalvarContainer}>
-                            <MyButtons label="Salvar alterações" style={styles.buttonSalvar} styleText={styles.buttonText} />
+                            <MyButtons label="Salvar alterações" style={styles.buttonSalvar} styleText={styles.buttonText} onPress={updateVaccine}/>
                         </View>
                     
                         <IconTrash style={styles.iconTrash} />

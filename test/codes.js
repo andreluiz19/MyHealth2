@@ -79,4 +79,15 @@ const dispatch = useDispatch();
 
 item={item} onPress={confirmDelete}
 
+
+useBackHandler(() => {
+        if(isRefresh){
+            console.log(isRefresh);
+            setIsRefresh(!isRefresh);
+        }else{
+            console.log(isRefresh);
+            setIsRefresh(!isRefresh);
+        }
+    });
+
 */
