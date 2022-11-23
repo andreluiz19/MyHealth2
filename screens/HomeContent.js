@@ -2,6 +2,9 @@ import React, {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux';
 import { onSnapshot, query, collection } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { reducerSetVacina } from '../redux/vacinaSlice';
+import { reducerSetCoords } from '../redux/coordsSlice';
+import { useDispatch } from 'react-redux';
 
 import {
     View,
@@ -18,8 +21,7 @@ import MyInputs from '../components/MyInputs';
 
 const HomeContent = (props) => {
 
-    const email = useSelector((state) => state.login.email);
-    const password = useSelector((state) => state.login.password);
+    const dispatch = useDispatch();
     const uid = useSelector((state) => state.login.idUser);
     const [vacinas, setVacinas] = useState([]);
     const urlVacinas = "users/"+uid+"/vacinas";
@@ -27,6 +29,13 @@ const HomeContent = (props) => {
     const [searchString, setSearchString] = useState('');
 
     const goToNewVaccine = () => {
+        dispatch(reducerSetVacina({
+            id: null
+        }))
+        dispatch(reducerSetCoords({
+            latitude: null,
+            logintude: null
+        }))
         props.navigation.navigate('EditCreateVaccine')
     }
 
@@ -41,6 +50,8 @@ const HomeContent = (props) => {
                     proximaDose: doc.data().proximaDose,
                     dose: doc.data().dose,
                     urlImage: doc.data().urlImage,
+                    latitude: doc.data().latitude,
+                    longitude: doc.data().longitude
                 })
             })
             setVacinas(listaVacinas);

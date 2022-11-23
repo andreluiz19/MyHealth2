@@ -131,4 +131,18 @@ useEffect(() => {
             backAction
         );
     })
+
+    Geolocation.watchPosition((position) => {
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+        },
+        (error) => {
+            console.log(error);
+        },
+        {
+            distanceFilter: 10
+        })
+
+        <MyInputs styleInput={styles.styleInput} styleText={styles.dataProx} label="Próxima de vacinação" value={proximaDose} setValue={setProximaDose}/>
+        <MyInputs styleInput={styles.styleInput} styleText={styles.data} label="Data de vacinação" value={data} setValue={setData}/>
 */

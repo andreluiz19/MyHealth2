@@ -6,7 +6,7 @@ import {
     Dimensions,
     Image,
     Modal,
-    Alert
+    Alert,
 } from 'react-native'
 
 import IconCalendar from '../components/IconCalendar';
@@ -16,17 +16,21 @@ import IconTrash from '../components/IconTrash';
 import MyModal from '../components/MyModal';
 import Radio from '../components/Radio';
 
+import Geolocation from '@react-native-community/geolocation';
 import { db, storage } from '../config/firebase';
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { reducerSetVacina } from '../redux/vacinaSlice';
 import { deleteDoc, addDoc, collection, doc, getDoc, updateDoc} from 'firebase/firestore';
-import { useBackHandler } from '@react-native-community/hooks';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { uploadBytes, ref, getDownloadURL, deleteObject } from 'firebase/storage';
+import { useDispatch } from 'react-redux';
+import { reducerSetCoords } from '../redux/coordsSlice';
+import { TextInputMask } from 'react-native-masked-text';
 
 const EditCreateVaccine = (props) => {
-
+    
+    const dispatch = useDispatch();
+    const latitude = useSelector((state) => state.coords.latitude);
+    const longitude = useSelector((state) => state.coords.longitude);  
     const uid = useSelector((state) => state.login.idUser);
     const id = useSelector((state) => state.vacina.id);
     const [vacina, setVacina] = useState('');
@@ -36,12 +40,8 @@ const EditCreateVaccine = (props) => {
     const [urlImage, setUrlImage] = useState('');
     const [visible, setVisible] = useState(false);
     const [selected, setSelected] = useState();
-    const urlVacina = "users/"+uid+"/vacinas";
-    const [isRefresh, setIsRefresh] = useState(true);
-    const dispatch = useDispatch();
     const [pathImage, setPathImage] = useState(null);
-    const dataFormatada = data.split('/');
-    const proxDoseFormatada = proximaDose.split('/');
+    const urlVacina = "users/"+uid+"/vacinas";
 
     const changeModalVisible = (bool) => {
         setVisible(bool);
@@ -56,22 +56,6 @@ const EditCreateVaccine = (props) => {
         setPathImage(null);
         setSelected();
     }
-    
-    useBackHandler(() => {
-        if(isRefresh){
-            //console.log(isRefresh);
-            dispatch(reducerSetVacina({
-                id: null
-            }))
-            setIsRefresh(!isRefresh);
-        }else{
-            //console.log(isRefresh);
-            dispatch(reducerSetVacina({
-                id: null
-            }))
-            setIsRefresh(!isRefresh);
-        }
-    });
     
     useEffect(() => {
         if(id){
@@ -99,8 +83,7 @@ const EditCreateVaccine = (props) => {
         }else{
             resetFields();
         }
-
-    }, [isRefresh, id]);
+    }, [id]);
 
     const newVaccine = async () => {
         const dados = await fetch(urlImage);
@@ -113,15 +96,15 @@ const EditCreateVaccine = (props) => {
             getDownloadURL(ref(storage, filename))
             .then((url) => {
                 console.log("URL: "+url);
-                //const date = new Date(dataFormatada[2], dataFormatada[1], dataFormatada[0], 0, 0, 0, 0);
-                //const nextDate =  new Date(proxDoseFormatada[2], proxDoseFormatada[1], proxDoseFormatada[0], 0, 0, 0, 0);
                 addDoc(collection(db, urlVacina), {
                     vacina: vacina,
                     data: data,
                     dose: dose,
                     proximaDose: proximaDose,
                     urlImage: url,
-                    pathImage: filename
+                    pathImage: filename,
+                    latitude: latitude,
+                    longitude: longitude
                 })
                 .then((result) => {
                     console.log("Cadastrou!");
@@ -184,22 +167,43 @@ const EditCreateVaccine = (props) => {
         uploadBytes(ref(storage, pathImage), blob)
         .then((result) => {
             console.log("Arquivo atualizado com sucesso!");
-            updateDoc(doc(db, urlVacina, id), {
-                vacina: vacina,
-                data: data,
-                dose: dose,
-                proximaDose: proximaDose,
-                urlImage: urlImage,
-                pathImage: pathImage
-            })
-            .then((result) => {
-                console.log("Vacina editada com sucesso!");
-                props.navigation.navigate('HomeContent');
-            })
-            .catch((error) => {
-                console.log("Erro ao editar vacina!");
-                console.log(error);
-            })
+            if(latitude != null && longitude != null){
+                updateDoc(doc(db, urlVacina, id), {
+                    vacina: vacina,
+                    data: data,
+                    dose: dose,
+                    proximaDose: proximaDose,
+                    urlImage: urlImage,
+                    pathImage: pathImage,
+                    latitude: latitude,
+                    longitude: longitude
+                })
+                .then((result) => {
+                    console.log("Vacina editada com sucesso!");
+                    props.navigation.navigate('HomeContent');
+                })
+                .catch((error) => {
+                    console.log("Erro ao editar vacina!");
+                    console.log(error);
+                })
+            }else{
+                updateDoc(doc(db, urlVacina, id), {
+                    vacina: vacina,
+                    data: data,
+                    dose: dose,
+                    proximaDose: proximaDose,
+                    urlImage: urlImage,
+                    pathImage: pathImage,
+                })
+                .then((result) => {
+                    console.log("Vacina editada com sucesso!");
+                    props.navigation.navigate('HomeContent');
+                })
+                .catch((error) => {
+                    console.log("Erro ao editar vacina!");
+                    console.log(error);
+                })
+            }
         })
         .catch((error) => {
             console.log("Erro ao atualizar arquivo");
@@ -250,14 +254,66 @@ const EditCreateVaccine = (props) => {
         })
     }
 
+    const locOptions = () => {
+        Alert.alert("Selecione a localização", "Você deseja selecionar um local especifíco ou utilizar a localização atual?", [
+            {
+                text: "Voltar",
+                cancelable: true,
+                style: "cancel"
+            },
+            {
+                text: "Selecionar localização",
+                onPress: () => goToMapa()
+            },
+            {
+                text: "Localização atual",
+                onPress: () => currentLoc()
+            },
+        
+        ])
+    }
+
+    const goToMapa = () => {
+        props.navigation.navigate('Mapa');
+    }
+
+    const clearRedux = () => {
+        dispatch(reducerSetCoords({
+            latitude: null,
+            longitude: null
+         }))
+    }
+
+    const currentLoc = () => {
+        Geolocation.getCurrentPosition( (position) => {
+            clearRedux();
+            dispatch(reducerSetCoords({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            }))
+        })
+    }
+
+
     return(
         
         <View style={styles.container}>
 
             <IconCalendar style={styles.icon} />
             
+            <Text style={styles.labelData}>Data</Text>
             <View style={styles.inputData}>
-                <MyInputs styleInput={styles.styleInput} styleText={styles.data} label="Data de vacinação" value={data} setValue={setData}/>
+                
+                <TextInputMask
+                    style={[styles.styleInput, styles.data]}
+                    type={'datetime'}
+                    options={{
+                        format: 'DD/MM/YYYY'
+                    }}
+                    value={data}
+                    onChangeText={setData}
+                    
+                />
             </View>
 
             <View style={styles.inputVacina}>
@@ -293,9 +349,22 @@ const EditCreateVaccine = (props) => {
             </View>
 
             <IconCalendar style={styles.icon2} />
-            
+            <Text style={styles.dataProx}>Próxima vacinação</Text>
             <View style={styles.inputDataProx}>
-                <MyInputs styleInput={styles.styleInput} styleText={styles.dataProx} label="Próxima de vacinação" value={proximaDose} setValue={setProximaDose}/>
+                
+                <TextInputMask
+                    style={[styles.styleInput, styles.data]}
+                    type={'datetime'}
+                    options={{
+                        format: 'DD/MM/YYYY'
+                    }}
+                    value={proximaDose}
+                    onChangeText={setProximaDose}
+                />
+            </View>
+
+            <View style={styles.localizacaoContainer}>
+                <MyButtons label="Local de vacinação" onPress={locOptions} styleText={styles.buttonMapText} style={styles.buttonLocalizacao}/>
             </View>
             {
                 id ?
@@ -325,6 +394,7 @@ const EditCreateVaccine = (props) => {
                         </View>
                     </View>
             }
+            
         </View>
         
     
@@ -348,7 +418,7 @@ const styles = StyleSheet.create({
     },
     buttonSalvarContainer: {
         marginLeft: 115,
-        marginTop: 50,
+        marginTop: 40,
         width: 180,
     },
     buttonExcluir: {
@@ -359,11 +429,11 @@ const styles = StyleSheet.create({
         elevation: 20
     },
     buttonExcluirContainer: {
-        marginTop: Dimensions.get('window').height - 600,
+        marginTop: Dimensions.get('window').height - 640,
         width: 130
     },
     iconTrash: {
-        marginTop: Dimensions.get('window').height - 613,
+        marginTop: Dimensions.get('window').height - 653,
         position: 'absolute',
         zIndex: 1,
         marginLeft: 140,
@@ -374,12 +444,20 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     dataProx: {
-        fontSize: 16,
+        position: 'absolute',
+        left: 18,
+        top: 338,
+        fontSize: 17,
         fontFamily: 'AveriaLibre-Regular',
+        color: 'white',
     },
     inputDataProx: {
-        marginLeft: 127,
-        width: '45%',
+        flexDirection: 'row',
+        marginTop: 15,
+        marginBottom: 15,
+        marginLeft: 164,
+        width: '36%',
+        backgroundColor: 'white',
     },
     image: {
         width: 220,
@@ -428,18 +506,21 @@ const styles = StyleSheet.create({
         fontFamily: 'AveriaLibre-Regular',
         color: 'white',
         position: 'absolute',
-        marginTop: 120,
+        marginTop: 125,
         marginLeft: 120
     }, 
     data: {
-        fontSize: 17,
+        fontSize: 20,
         fontFamily: 'AveriaLibre-Regular',
         width: 150,
+        color: '#419ED7'
     },
     inputData: {
-        marginTop: 20,
-        marginLeft: 127,
-        width: '45%',
+        flexDirection: 'row',
+        marginTop: 35,
+        marginLeft: 164,
+        width: '36%',
+        backgroundColor: 'white',
     },
     icon: {
         marginTop: 37,
@@ -459,7 +540,6 @@ const styles = StyleSheet.create({
     },
     inputVacina: {
         marginLeft: 110,
-        marginTop: -20,
         width: 270
     },
     buttonCadastrar: {
@@ -473,6 +553,27 @@ const styles = StyleSheet.create({
         marginTop: 100,
         width: 180,
     },
+    localizacaoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 10,
+    },
+    buttonLocalizacao: {
+        backgroundColor: '#419ED7',
+        padding: 5,
+        paddingHorizontal: 10,
+    },
+    buttonMapText: {
+        fontSize: 18,
+    },
+    labelData: {
+        position: 'absolute',
+        left: 123,
+        top: 40,
+        fontSize: 17,
+        fontFamily: 'AveriaLibre-Regular',
+        color: 'white'
+    }
 })
 
 export default EditCreateVaccine

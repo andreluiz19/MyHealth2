@@ -10,6 +10,7 @@ import {
 
 import { useDispatch } from 'react-redux';
 import { reducerSetVacina } from '../redux/vacinaSlice';
+import { reducerSetCoords } from '../redux/coordsSlice';
 
 const CardVacina = (props) => {
 
@@ -23,15 +24,19 @@ const CardVacina = (props) => {
             return 'Próxima dose em: '
         }
     })
-    const goToEditVaccine = (id) => {
+    const goToEditVaccine = (id, latitude, longitude) => {
         dispatch(reducerSetVacina({
             id: id
+        }))
+        dispatch(reducerSetCoords({
+            latitude: latitude,
+            longitude: longitude
         }))
         props.navigation.navigate('EditCreateVaccine');
     }
     return(
         
-        <TouchableOpacity onPress={() => goToEditVaccine(item.id)}>
+        <TouchableOpacity onPress={() => goToEditVaccine(item.id, item.latitude, item.longitude)}>
             
             <View style={styles.card}>
                 <Text style={{fontSize: 22, color: '#3F92C5', fontFamily: 'AveriaLibre-Regular', marginTop: 5}}>{item.vacina}</Text>

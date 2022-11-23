@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.myhealth.app-mergeDebugResources-27:/values-en-rAU/values-en-rAU.xml",
+            "outputFile": "com.myhealth.app-mergeDebugResources-32:/values-en-rAU/values-en-rAU.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Andre\\.gradle\\caches\\transforms-3\\63a3df243d2d102452600006144a86df\\transformed\\core-1.7.0\\res\\values-en-rAU\\values-en-rAU.xml",

@@ -25,7 +25,6 @@ const NextVaccines = (props) => {
     }
     
     useEffect(() => {
-        console.log("useEffect")
         onSnapshot(q, (result) => {
             const proximasVacinas = [];
             result.forEach((doc) => {
@@ -48,9 +47,13 @@ const NextVaccines = (props) => {
                         vacina: doc.data().vacina,
                         data: proxDose
                     })
+                }else if(diaVac == dia && mesVac == mes && anoVac == ano){
+                    proximasVacinas.push({
+                        vacina: doc.data().vacina,
+                        data: proxDose
+                    })
                 }
             })
-            console.log(proximasVacinas)
             setVacinas(proximasVacinas);
         })
     }, [])
@@ -75,8 +78,8 @@ const NextVaccines = (props) => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: '#ADD4D0',
-        height: Dimensions.get('window').height,
     },
     buttonVacina: {
         backgroundColor: '#37BD6D',
@@ -85,8 +88,9 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     button: {
-        alignItems: 'center',
-        marginTop: 260
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
     },
 })
 

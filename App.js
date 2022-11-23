@@ -8,9 +8,11 @@ import CreateAccount from './screens/CreateAccount'
 import IconHeader from './components/IconHeader';
 import ForgotPassword from './screens/ForgotPassword';
 import EditCreateVaccine from './screens/EditCreateVaccine';
+import Mapa from './screens/Mapa';
 
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+
 
 const Stack = createNativeStackNavigator()
 
@@ -67,6 +69,11 @@ const App = () => {
             }}
           />
           <Stack.Screen name="EditCreateVaccine" component={EditCreateVaccine}
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen name="Mapa" component={Mapa}
             options={{
               headerShown: false
             }}
