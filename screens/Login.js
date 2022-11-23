@@ -24,9 +24,9 @@ const Login = (props) => {
 
     const dispatch = useDispatch();
 
-    const [email, setEmail] = useState('andre@hotmail.com')
-    const [password, setPassword] = useState('123456')
-    const [errorAuth, setErrorAuth] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorAuth, setErrorAuth] = useState('');
 
     const loginUser = () => {
         
@@ -39,11 +39,11 @@ const Login = (props) => {
                 password: password,
                 idUser: userCredential.user.uid
             }))
-            /*
+            
             setErrorAuth('');
             setEmail('');
             setPassword('');
-            */
+            
             goToHome();
         })
         .catch( (error) => {

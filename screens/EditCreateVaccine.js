@@ -396,9 +396,6 @@ const EditCreateVaccine = (props) => {
             }
             
         </View>
-        
-    
-    
     ); 
 }
 
